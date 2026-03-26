@@ -2,11 +2,7 @@ package com.example.kitchenkompanion
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.kitchenkompanion.databinding.ActivityMainBinding
-import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,60 +13,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = ViewPagerAdapter(this)
-        binding.viewPager.adapter = adapter
-
-        // nav bar setup
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.text = "Text"
-                    tab.setIcon(R.drawable._621521691571183084_128)
-                }
-                1 -> {
-                    tab.text = "LR"
-                    tab.setIcon(R.drawable.img_1)
-
-                }
-                2 -> {
-                    tab.text = "Colors"
-                    tab.setIcon(R.drawable._7755608461595340913_128)
-                }
-                3 -> {
-                    tab.text = "Profile"
-                    tab.setIcon(R.drawable.img_2)
-                }
-                4 -> {
-                    tab.text = "Choices"
-                }
-                5 -> {
-                    tab.text = "ToDo"
-                    tab.setIcon(R.drawable.checklist)
-                }
-            }
-            
-            // Set the custom icon for the Choices tab
-            if (position == 4) {
-                tab.setIcon(R.drawable.ic_choices)
-            }
-        }.attach()
-
-        binding.viewPager.setCurrentItem(0, false)
-    }
-
-    private inner class ViewPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 6
-
-        override fun createFragment(position: Int): Fragment {
-            return when (position) {
-                0 -> TextFragment()
-                1 -> LRFragment()
-                2 -> ColorsFragment()
-                3 -> ProfileFragment()
-                4 -> ChoicesFragment()
-                5 -> TodoFragment()
-                else -> PlaceholderFragment.newInstance(position)
-            }
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HomePage())
+                .commit()
         }
     }
 }
