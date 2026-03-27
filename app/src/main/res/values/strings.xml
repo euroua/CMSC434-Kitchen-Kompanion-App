@@ -5,4 +5,31 @@
         <item>dSLR</item>
         <item>Mirrorless</item>
     </string-array>
+    <string-array name="household_members_array">
+        <item>Select number</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6+</item>
+    </string-array>
+    <string-array name="allergies_array">
+        <item>Select an allergy</item>
+        <item>None</item>
+        <item>Peanuts</item>
+        <item>Dairy</item>
+        <item>Gluten</item>
+        <item>Shellfish</item>
+        <item>Soy</item>
+        <item>Eggs</item>
+        <item>Tree Nuts</item>
+        <item>Other</item>
+    </string-array>
+    <string name="birthday_label">Birthday</string>
+    <string name="birthday_hint">Select your birthday</string>
+    <string name="household_members_label">Household Occupants</string>
+    <string name="allergies_label">Select Allergy</string>
+    <string name="selected_allergies_label">Your Allergies:</string>
+    <string name="none_selected">None selected</string>
 </resources>

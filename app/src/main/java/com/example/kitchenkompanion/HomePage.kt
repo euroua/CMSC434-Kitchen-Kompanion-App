@@ -35,7 +35,7 @@ class HomePage : Fragment() {
 
         // Profile Picture
         val ivProfile = view.findViewById<ImageView>(R.id.ivProfilePic)
-        ivProfile.setOnClickListener { navigateToPlaceholder("Profile") }
+        ivProfile.setOnClickListener { navigateToProfile() }
 
         // Recommended Recipes from FavoritesPage repository
         val rvRecommended = view.findViewById<RecyclerView>(R.id.rvRecommendedRecipes)
@@ -73,13 +73,14 @@ class HomePage : Fragment() {
         popup.menu.add("All Recipes")
         popup.menu.add("Favorites")
         popup.menu.add("Shopping List")
+        popup.menu.add("Profile")
         
         popup.setOnMenuItemClickListener { item ->
             val title = item.title.toString()
-            if (title == "Favorites") {
-                navigateToFavorites()
-            } else {
-                navigateToPlaceholder(title)
+            when (title) {
+                "Favorites" -> navigateToFavorites()
+                "Profile" -> navigateToProfile()
+                else -> navigateToPlaceholder(title)
             }
             true
         }
@@ -89,6 +90,13 @@ class HomePage : Fragment() {
     private fun navigateToFavorites() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, FavoritesPage())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun navigateToProfile() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, ProfileFragment())
             .addToBackStack(null)
             .commit()
     }

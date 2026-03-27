@@ -2,12 +2,13 @@
     <!-- Base application theme. -->
     <style name="Theme.KitchenKompanion" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/nav_bar_color</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- nav bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/nav_bar_color</item>
+        <item name="android:navigationBarColor">@color/nav_bar_color</item>
     </style>
 </resources>

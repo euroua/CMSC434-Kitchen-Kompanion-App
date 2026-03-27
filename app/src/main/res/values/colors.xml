@@ -11,4 +11,8 @@
     <color name="blue">#2196F3</color>
     <color name="light_gray">#F5F5F5</color>
     <color name="yellow_star">#FFD700</color>
+
+    <color name="main_background">#C0C0C0</color>
+    <color name="nav_bar_color">#4052D6</color>
+    <color name="supporting_text">#000000</color>
 </resources>
