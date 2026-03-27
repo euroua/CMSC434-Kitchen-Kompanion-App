@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -38,19 +37,14 @@ class HomePage : Fragment() {
         val ivProfile = view.findViewById<ImageView>(R.id.ivProfilePic)
         ivProfile.setOnClickListener { navigateToPlaceholder("Profile") }
 
-        // Recommended Recipes (Setting all to false so they start "empty")
+        // Recommended Recipes from FavoritesPage repository
         val rvRecommended = view.findViewById<RecyclerView>(R.id.rvRecommendedRecipes)
-        val recipes = listOf(
-            Recipe("Creamy Salmon Pasta", "25 mins", "Medium", false, R.drawable.salmon_pasta),
-            Recipe("Tomato Basil Pasta", "20 mins", "Easy", false, R.drawable.pasta),
-            Recipe("Strawberry Salad", "15 mins", "Easy", false, R.drawable.strawberry),
-            Recipe("Roasted Potatoes", "40 mins", "Easy", false, R.drawable.potato)
-        )
+        val recipes = FavoritesPage.getAllRecipes()
         rvRecommended.adapter = RecipeAdapter(recipes) { recipe ->
             navigateToPlaceholder(recipe.name)
         }
 
-        // Your Ingredients - 3x3 Grid with your provided images
+        // Your Ingredients 3x3 Grid
         val rvIngredients = view.findViewById<RecyclerView>(R.id.rvYourIngredients)
         val ingredients = listOf(
             Ingredient("Salmon", R.drawable.salmon),
@@ -67,7 +61,7 @@ class HomePage : Fragment() {
             navigateToPlaceholder(ingredient.name)
         }
 
-        // See All -> All Ingredients
+        // See All to All Ingredients
         view.findViewById<TextView>(R.id.tvSeeAll).setOnClickListener {
             navigateToPlaceholder("All Ingredients")
         }
@@ -81,10 +75,22 @@ class HomePage : Fragment() {
         popup.menu.add("Shopping List")
         
         popup.setOnMenuItemClickListener { item ->
-            navigateToPlaceholder(item.title.toString())
+            val title = item.title.toString()
+            if (title == "Favorites") {
+                navigateToFavorites()
+            } else {
+                navigateToPlaceholder(title)
+            }
             true
         }
         popup.show()
+    }
+
+    private fun navigateToFavorites() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, FavoritesPage())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun navigateToPlaceholder(pageName: String) {
@@ -95,12 +101,10 @@ class HomePage : Fragment() {
             .commit()
     }
 
-    // Data Classes
-    data class Recipe(val name: String, val time: String, val difficulty: String, var isFavorited: Boolean, val imageRes: Int)
     data class Ingredient(val name: String, val imageRes: Int)
 
-    // Adapters
-    inner class RecipeAdapter(private val items: List<Recipe>, private val onClick: (Recipe) -> Unit) :
+    // Adapter for Recipes
+    inner class RecipeAdapter(private val items: List<FavoritesPage.Companion.Recipe>, private val onClick: (FavoritesPage.Companion.Recipe) -> Unit) :
         RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
 
         inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -113,7 +117,7 @@ class HomePage : Fragment() {
                 v.setOnClickListener { onClick(items[adapterPosition]) }
                 heart.setOnClickListener {
                     val recipe = items[adapterPosition]
-                    recipe.isFavorited = !recipe.isFavorited
+                    FavoritesPage.toggleFavorite(recipe.name)
                     notifyItemChanged(adapterPosition)
                 }
             }
@@ -143,6 +147,7 @@ class HomePage : Fragment() {
         override fun getItemCount() = items.size
     }
 
+    // Adapter for Ingredients
     inner class IngredientAdapter(private val items: List<Ingredient>, private val onClick: (Ingredient) -> Unit) :
         RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
 
