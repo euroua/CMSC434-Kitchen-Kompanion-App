@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btnBackHome"
+            android:id="@+id/btnBack"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginStart="16dp"
@@ -25,25 +25,39 @@
             app:tint="@color/white" />
 
         <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="sans-serif-medium"
-            android:text="Shopping List"
+            android:text="All Items"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btnBackHome"
+            app:layout_constraintStart_toEndOf="@id/btnBack"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ListView
-        android:id="@+id/shoppingListView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAllItems"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerBar" />
+        app:layout_constraintTop_toBottomOf="@id/headerBar"
+        tools:listitem="@layout/item_recipe" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        app:backgroundTint="@color/blue" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

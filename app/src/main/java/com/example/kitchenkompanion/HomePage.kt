@@ -33,37 +33,32 @@ class HomePage : Fragment() {
         val ivMenu = view.findViewById<ImageView>(R.id.ivHamburgerMenu)
         ivMenu.setOnClickListener { showMenu(it) }
 
-        // Profile Picture
+        // Profile Picture -> ProfileFragment
         val ivProfile = view.findViewById<ImageView>(R.id.ivProfilePic)
-        ivProfile.setOnClickListener { navigateToProfile() }
+        ivProfile.setOnClickListener { 
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ProfileFragment())
+                .addToBackStack(null)
+                .commit()
+        }
 
-        // Recommended Recipes from FavoritesPage repository
+        // Recommended Recipes -> RecipeDetailFragment
         val rvRecommended = view.findViewById<RecyclerView>(R.id.rvRecommendedRecipes)
         val recipes = FavoritesPage.getAllRecipes()
         rvRecommended.adapter = RecipeAdapter(recipes) { recipe ->
             navigateToRecipeDetail(recipe)
         }
 
-        // Your Ingredients 3x3 Grid
+        // Your Ingredients
         val rvIngredients = view.findViewById<RecyclerView>(R.id.rvYourIngredients)
-        val ingredients = listOf(
-            Ingredient("Salmon", R.drawable.salmon),
-            Ingredient("Pasta", R.drawable.pasta),
-            Ingredient("Strawberry", R.drawable.strawberry),
-            Ingredient("Lemon", R.drawable.lemon),
-            Ingredient("Tomato", R.drawable.tomato),
-            Ingredient("Lettuce", R.drawable.lettuce),
-            Ingredient("Milk", R.drawable.milk),
-            Ingredient("Cheese", R.drawable.cheese),
-            Ingredient("Potato", R.drawable.potato)
-        )
+        val ingredients = FavoritesPage.getAllIngredients()
         rvIngredients.adapter = IngredientAdapter(ingredients) { ingredient ->
             navigateToPlaceholder(ingredient.name)
         }
 
-        // See All to All Ingredients
+        // See All -> All Ingredients
         view.findViewById<TextView>(R.id.tvSeeAll).setOnClickListener {
-            navigateToPlaceholder("All Ingredients")
+            navigateToAllItems(AllItemsPage.TYPE_INGREDIENTS)
         }
     }
 
@@ -73,13 +68,13 @@ class HomePage : Fragment() {
         popup.menu.add("All Recipes")
         popup.menu.add("Favorites")
         popup.menu.add("Shopping List")
-        popup.menu.add("Profile")
         
         popup.setOnMenuItemClickListener { item ->
             val title = item.title.toString()
             when (title) {
                 "Favorites" -> navigateToFavorites()
-                "Profile" -> navigateToProfile()
+                "All Ingredients" -> navigateToAllItems(AllItemsPage.TYPE_INGREDIENTS)
+                "All Recipes" -> navigateToAllItems(AllItemsPage.TYPE_RECIPES)
                 "Shopping List" -> navigateToShoppingList()
                 else -> navigateToPlaceholder(title)
             }
@@ -94,6 +89,7 @@ class HomePage : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
     private fun navigateToShoppingList() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, ShoppingListFragment())
@@ -101,32 +97,23 @@ class HomePage : Fragment() {
             .commit()
     }
 
-    private fun navigateToProfile() {
+    private fun navigateToAllItems(type: String) {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, ProfileFragment())
+            .replace(R.id.fragment_container, AllItemsPage.newInstance(type))
             .addToBackStack(null)
             .commit()
     }
+
     private fun navigateToRecipeDetail(recipe: FavoritesPage.Companion.Recipe) {
         val fragment = RecipeDetailFragment()
-        val bundle = Bundle()
-
-        bundle.putString("name", recipe.name)
-        bundle.putString("time", recipe.time)
-        bundle.putString("difficulty", recipe.difficulty)
-        bundle.putInt("imageRes", recipe.imageRes)
-
-        val missingIngredients = when (recipe.name) {
-            "Creamy Salmon Pasta" -> arrayListOf("Garlic", "Heavy Cream")
-            "Tomato Basil Pasta" -> arrayListOf("Fresh Basil")
-            "Strawberry Salad" -> arrayListOf("Dressing")
-            "Roasted Potatoes" -> arrayListOf("Olive Oil")
-            else -> arrayListOf()
-        }
-
-        bundle.putStringArrayList("missingIngredients", missingIngredients)
-        fragment.arguments = bundle
-
+        val args = Bundle()
+        args.putString("name", recipe.name)
+        args.putString("time", recipe.time)
+        args.putString("difficulty", recipe.difficulty)
+        args.putInt("imageRes", recipe.imageRes)
+        args.putStringArrayList("missingIngredients", recipe.missingIngredients)
+        fragment.arguments = args
+        
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
@@ -140,8 +127,6 @@ class HomePage : Fragment() {
             .addToBackStack(null)
             .commit()
     }
-
-    data class Ingredient(val name: String, val imageRes: Int)
 
     // Adapter for Recipes
     inner class RecipeAdapter(private val items: List<FavoritesPage.Companion.Recipe>, private val onClick: (FavoritesPage.Companion.Recipe) -> Unit) :
@@ -188,7 +173,7 @@ class HomePage : Fragment() {
     }
 
     // Adapter for Ingredients
-    inner class IngredientAdapter(private val items: List<Ingredient>, private val onClick: (Ingredient) -> Unit) :
+    inner class IngredientAdapter(private val items: List<FavoritesPage.Companion.Ingredient>, private val onClick: (FavoritesPage.Companion.Ingredient) -> Unit) :
         RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
 
         inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -212,6 +197,4 @@ class HomePage : Fragment() {
 
         override fun getItemCount() = items.size
     }
-
-
 }

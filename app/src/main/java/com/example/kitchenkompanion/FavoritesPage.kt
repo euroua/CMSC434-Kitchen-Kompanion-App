@@ -12,24 +12,40 @@ import androidx.recyclerview.widget.RecyclerView
 
 class FavoritesPage : Fragment() {
 
-    // Data management moved here and kept static to persist status
+    // Central Data Repository
     companion object {
         data class Recipe(
             val name: String,
             val time: String,
             val difficulty: String,
             var isFavorited: Boolean,
-            val imageRes: Int
+            val imageRes: Int,
+            val missingIngredients: ArrayList<String> = arrayListOf()
         )
 
+        data class Ingredient(val name: String, val imageRes: Int)
+
         private val recipes = mutableListOf(
-            Recipe("Creamy Salmon Pasta", "25 mins", "Medium", false, R.drawable.salmon_pasta),
-            Recipe("Tomato Basil Pasta", "20 mins", "Easy", false, R.drawable.tomato_pasta),
-            Recipe("Strawberry Salad", "15 mins", "Easy", false, R.drawable.strawberry_salad),
-            Recipe("Roasted Potatoes", "40 mins", "Easy", false, R.drawable.roasted_potatoes)
+            Recipe("Creamy Salmon Pasta", "25 mins", "Medium", false, R.drawable.salmon_pasta, arrayListOf("Heavy Cream", "Basil")),
+            Recipe("Tomato Basil Pasta", "20 mins", "Easy", false, R.drawable.tomato_pasta, arrayListOf("Basil")),
+            Recipe("Strawberry Salad", "15 mins", "Easy", false, R.drawable.strawberry_salad, arrayListOf("Poppyseed Dressing", "Walnuts")),
+            Recipe("Roasted Potatoes", "40 mins", "Easy", false, R.drawable.roasted_potatoes, arrayListOf("Rosemary", "Olive Oil"))
+        )
+
+        private val ingredients = mutableListOf(
+            Ingredient("Salmon", R.drawable.salmon),
+            Ingredient("Pasta", R.drawable.pasta),
+            Ingredient("Strawberry", R.drawable.strawberry),
+            Ingredient("Lemon", R.drawable.lemon),
+            Ingredient("Tomato", R.drawable.tomato),
+            Ingredient("Lettuce", R.drawable.lettuce),
+            Ingredient("Milk", R.drawable.milk),
+            Ingredient("Cheese", R.drawable.cheese),
+            Ingredient("Potato", R.drawable.potato)
         )
 
         fun getAllRecipes(): List<Recipe> = recipes
+        fun getAllIngredients(): List<Ingredient> = ingredients
 
         fun getFavoritedRecipes(): List<Recipe> = recipes.filter { it.isFavorited }
 
@@ -59,16 +75,38 @@ class FavoritesPage : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
+        refreshFavoritesList()
+    }
+
+    private fun refreshFavoritesList() {
         val favoritedItems = getFavoritedRecipes()
-        
+        val rvFavorites = view?.findViewById<RecyclerView>(R.id.rvFavorites)
+        val tvEmpty = view?.findViewById<TextView>(R.id.tvEmptyMessage)
+
         if (favoritedItems.isEmpty()) {
-            tvEmpty.visibility = View.VISIBLE
-            rvFavorites.visibility = View.GONE
+            tvEmpty?.visibility = View.VISIBLE
+            rvFavorites?.visibility = View.GONE
         } else {
-            tvEmpty.visibility = View.GONE
-            rvFavorites.visibility = View.VISIBLE
-            rvFavorites.adapter = FavoriteAdapter(favoritedItems)
+            tvEmpty?.visibility = View.GONE
+            rvFavorites?.visibility = View.VISIBLE
+            rvFavorites?.adapter = FavoriteAdapter(favoritedItems)
         }
+    }
+
+    private fun navigateToRecipeDetail(recipe: Recipe) {
+        val fragment = RecipeDetailFragment()
+        val args = Bundle()
+        args.putString("name", recipe.name)
+        args.putString("time", recipe.time)
+        args.putString("difficulty", recipe.difficulty)
+        args.putInt("imageRes", recipe.imageRes)
+        args.putStringArrayList("missingIngredients", recipe.missingIngredients)
+        fragment.arguments = args
+        
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     inner class FavoriteAdapter(private val items: List<Recipe>) :
@@ -94,19 +132,16 @@ class FavoritesPage : Fragment() {
             holder.difficulty.text = item.difficulty
             holder.image.setImageResource(item.imageRes)
             
-            // In favorites page, they are all favorited
             holder.heart.setImageResource(android.R.drawable.btn_star_big_on)
             holder.heart.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.yellow_star))
             
+            holder.itemView.setOnClickListener {
+                navigateToRecipeDetail(item)
+            }
+
             holder.heart.setOnClickListener {
                 toggleFavorite(item.name)
-                // Refresh the list when it's no longer a favorite
-                val updatedList = getFavoritedRecipes()
-                if (updatedList.isEmpty()) {
-                    view?.findViewById<TextView>(R.id.tvEmptyMessage)?.visibility = View.VISIBLE
-                    view?.findViewById<RecyclerView>(R.id.rvFavorites)?.visibility = View.GONE
-                }
-                notifyDataSetChanged() 
+                refreshFavoritesList()
             }
         }
 

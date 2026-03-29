@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.widget.ImageButton
 
 class RecipeDetailFragment : Fragment() {
 
@@ -39,7 +38,7 @@ class RecipeDetailFragment : Fragment() {
         val instructionsText = view.findViewById<TextView>(R.id.instructionsText)
         val addMissingButton = view.findViewById<Button>(R.id.addMissingButton)
 
-        val backButton = view.findViewById<ImageButton>(R.id.btnBack)
+        val backButton = view.findViewById<ImageView>(R.id.btnBack)
 
         backButton.setOnClickListener {
             parentFragmentManager.popBackStack()
