@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         app:itemBackground="@drawable/nav_item_background"
+        app:itemActiveIndicatorStyle="@null"
         app:itemIconSize="40dp"
         app:itemIconTint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"

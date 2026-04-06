@@ -1,13 +1,14 @@
 package com.example.kitchenkompanion
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.kitchenkompanion.databinding.FragmentProfileBinding
 import java.util.Calendar
@@ -32,15 +33,8 @@ class ProfileFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        binding.profileImage.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Notification")
-                .setMessage("Warning! Do not click on profile image")
-                .setPositiveButton("Close") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
+        binding.profileImage.setOnClickListener(null)
+        binding.profileImage.isClickable = false
 
         binding.etProfileName.setText(FavoritesPage.currentUsername)
 
@@ -48,7 +42,11 @@ class ProfileFragment : Fragment() {
             val newName = binding.etProfileName.text.toString()
             if (newName.isNotBlank()) {
                 FavoritesPage.currentUsername = newName
-                Toast.makeText(context, "Name updated to $newName", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Name saved", Toast.LENGTH_SHORT).show()
+                
+                binding.etProfileName.clearFocus()
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                imm?.hideSoftInputFromWindow(view.windowToken, 0)
             } else {
                 Toast.makeText(context, "Name cannot be empty", Toast.LENGTH_SHORT).show()
             }
@@ -84,7 +82,7 @@ class ProfileFragment : Fragment() {
     private fun setupAllergySpinner() {
         binding.allergiesSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == 0) return // Skip "Select an allergy"
+                if (position == 0) return
 
                 val selected = parent?.getItemAtPosition(position).toString()
                 if (selected == "None") {
