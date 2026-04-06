@@ -36,6 +36,7 @@ class IngredientDetailFragment : Fragment() {
         val btnPlus = view.findViewById<Button>(R.id.btnPlus)
         val btnMinus = view.findViewById<Button>(R.id.btnMinus)
         val btnBack = view.findViewById<ImageView>(R.id.btnBack)
+        val btnDelete = view.findViewById<Button>(R.id.btnDelete)
 
         tvName.text = name
         tvCategory.text = "Category: $category"
@@ -50,7 +51,6 @@ class IngredientDetailFragment : Fragment() {
         fun updateDisplay() {
             if (ingredient == null || ingredient.quantity <= 0) {
                 FavoritesPage.removeIngredient(name)
-                Toast.makeText(context, "$name removed from ingredients", Toast.LENGTH_SHORT).show()
                 parentFragmentManager.popBackStack()
             } else {
                 tvQuantity.text = ingredient.quantity.toString()
@@ -69,6 +69,12 @@ class IngredientDetailFragment : Fragment() {
                 it.quantity--
                 updateDisplay()
             }
+        }
+
+        btnDelete.setOnClickListener {
+            FavoritesPage.removeIngredient(name)
+            Toast.makeText(context, "$name removed", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
         }
 
         btnBack.setOnClickListener {
