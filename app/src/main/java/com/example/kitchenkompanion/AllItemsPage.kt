@@ -42,16 +42,29 @@ class AllItemsPage : Fragment() {
         val type = arguments?.getString(ARG_TYPE) ?: ""
         
         view.findViewById<TextView>(R.id.tvTitle).text = type
-        view.findViewById<ImageView>(R.id.btnBack).setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
 
         val rv = view.findViewById<RecyclerView>(R.id.rvAllItems)
         val fab = view.findViewById<FloatingActionButton>(R.id.fabAdd)
 
         if (type == TYPE_INGREDIENTS) {
-            rv.layoutManager = GridLayoutManager(context, 3)
-            rv.adapter = IngredientAdapter(FavoritesPage.getAllIngredients())
+            val rawIngredients = FavoritesPage.getAllIngredients()
+            val itemsWithHeaders = mutableListOf<Any>()
+            
+            val grouped = rawIngredients.groupBy { it.category }
+            grouped.forEach { (category, list) ->
+                itemsWithHeaders.add(category) // Add header string
+                itemsWithHeaders.addAll(list) // Add ingredients
+            }
+
+            val layoutManager = GridLayoutManager(context, 3)
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (itemsWithHeaders[position] is String) 3 else 1
+                }
+            }
+            rv.layoutManager = layoutManager
+            rv.adapter = IngredientAdapter(itemsWithHeaders)
+            
             fab.visibility = View.VISIBLE
             fab.setOnClickListener {
                 Toast.makeText(context, "Add Ingredient Clicked", Toast.LENGTH_SHORT).show()
@@ -123,33 +136,53 @@ class AllItemsPage : Fragment() {
         override fun getItemCount() = items.size
     }
 
-    inner class IngredientAdapter(private val items: List<FavoritesPage.Companion.Ingredient>) :
-        RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
+    inner class IngredientAdapter(private val items: List<Any>) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-            val name: TextView = v.findViewById(R.id.tvIngredientName)
-            val image: ImageView = v.findViewById(R.id.ivIngredientImage)
+        private val TYPE_HEADER = 0
+        private val TYPE_ITEM = 1
+
+        override fun getItemViewType(position: Int): Int {
+            return if (items[position] is String) TYPE_HEADER else TYPE_ITEM
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val v = LayoutInflater.from(parent.context).inflate(R.layout.item_ingredient, parent, false)
-            return ViewHolder(v)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            return if (viewType == TYPE_HEADER) {
+                val v = LayoutInflater.from(parent.context).inflate(R.layout.item_category_header, parent, false)
+                HeaderViewHolder(v)
+            } else {
+                val v = LayoutInflater.from(parent.context).inflate(R.layout.item_ingredient, parent, false)
+                ItemViewHolder(v)
+            }
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val item = items[position]
-            holder.name.text = item.name
-            holder.image.setImageResource(item.imageRes)
-            
-            holder.itemView.setOnClickListener {
-                val fragment = PlaceholderFragment.newInstance(item.name)
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            if (holder is HeaderViewHolder) {
+                holder.title.text = items[position] as String
+            } else if (holder is ItemViewHolder) {
+                val item = items[position] as FavoritesPage.Companion.Ingredient
+                holder.name.text = item.name
+                holder.image.setImageResource(item.imageRes)
+                
+                holder.itemView.setOnClickListener {
+                    val fragment = PlaceholderFragment.newInstance(item.name)
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
             }
         }
 
         override fun getItemCount() = items.size
+
+        inner class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+            val title: TextView = v.findViewById(R.id.tvHeaderTitle)
+        }
+
+        inner class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+            val name: TextView = v.findViewById(R.id.tvIngredientName)
+            val image: ImageView = v.findViewById(R.id.ivIngredientImage)
+        }
     }
 }

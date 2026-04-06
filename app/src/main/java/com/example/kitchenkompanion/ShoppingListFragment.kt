@@ -24,7 +24,6 @@ class ShoppingListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val listView = view.findViewById<ListView>(R.id.shoppingListView)
-        val backButton = view.findViewById<ImageView>(R.id.btnBackHome)
         val btnAddItem = view.findViewById<Button>(R.id.btnAddItem)
         val btnSuggestLow = view.findViewById<Button>(R.id.btnSuggestLow)
         val btnAddFromRecipe = view.findViewById<Button>(R.id.btnAddFromRecipe)
@@ -56,10 +55,6 @@ class ShoppingListFragment : Fragment() {
                 sortAndNotify()
                 Toast.makeText(context, "Added recipe suggestions", Toast.LENGTH_SHORT).show()
             }
-        }
-
-        backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
         }
     }
 

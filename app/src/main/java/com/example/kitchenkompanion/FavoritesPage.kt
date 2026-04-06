@@ -23,7 +23,7 @@ class FavoritesPage : Fragment() {
             val missingIngredients: ArrayList<String> = arrayListOf()
         )
 
-        data class Ingredient(val name: String, val imageRes: Int)
+        data class Ingredient(val name: String, val imageRes: Int, val category: String)
 
         private val recipes = mutableListOf(
             Recipe("Creamy Salmon Pasta", "25 mins", "Medium", false, R.drawable.salmon_pasta, arrayListOf("Heavy Cream", "Basil")),
@@ -35,15 +35,15 @@ class FavoritesPage : Fragment() {
         )
 
         private val ingredients = mutableListOf(
-            Ingredient("Salmon", R.drawable.salmon),
-            Ingredient("Pasta", R.drawable.pasta),
-            Ingredient("Strawberry", R.drawable.strawberry),
-            Ingredient("Lemon", R.drawable.lemon),
-            Ingredient("Tomato", R.drawable.tomato),
-            Ingredient("Lettuce", R.drawable.lettuce),
-            Ingredient("Milk", R.drawable.milk),
-            Ingredient("Cheese", R.drawable.cheese),
-            Ingredient("Potato", R.drawable.potato)
+            Ingredient("Salmon", R.drawable.salmon, "Poultry/Meats"),
+            Ingredient("Pasta", R.drawable.pasta, "Grains"),
+            Ingredient("Strawberry", R.drawable.strawberry, "Produce"),
+            Ingredient("Lemon", R.drawable.lemon, "Produce"),
+            Ingredient("Tomato", R.drawable.tomato, "Produce"),
+            Ingredient("Lettuce", R.drawable.lettuce, "Produce"),
+            Ingredient("Milk", R.drawable.milk, "Dairy"),
+            Ingredient("Cheese", R.drawable.cheese, "Dairy"),
+            Ingredient("Potato", R.drawable.potato, "Produce")
         )
 
         fun getAllRecipes(): List<Recipe> = recipes
@@ -68,15 +68,6 @@ class FavoritesPage : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val rvFavorites = view.findViewById<RecyclerView>(R.id.rvFavorites)
-        val tvEmpty = view.findViewById<TextView>(R.id.tvEmptyMessage)
-        val btnBack = view.findViewById<ImageView>(R.id.btnBack)
-
-        btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-
         refreshFavoritesList()
     }
 
