@@ -15,6 +15,8 @@ class FavoritesPage : Fragment() {
     // Central Data Repository
     companion object {
         const val NO_IMAGE = -1
+        
+        var currentUsername: String = "User"
 
         data class Recipe(
             val name: String,

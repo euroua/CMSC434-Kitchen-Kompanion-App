@@ -69,8 +69,8 @@ class AllItemsPage : Fragment() {
         
         val grouped = rawIngredients.groupBy { it.category }
         grouped.forEach { (category, list) ->
-            itemsWithHeaders.add(category) // Add header string
-            itemsWithHeaders.addAll(list) // Add ingredients
+            itemsWithHeaders.add(category)
+            itemsWithHeaders.addAll(list)
         }
 
         val layoutManager = GridLayoutManager(context, 3)
@@ -109,7 +109,7 @@ class AllItemsPage : Fragment() {
         val dialog = AlertDialog.Builder(context)
             .setTitle("Add New Ingredient")
             .setView(dialogView)
-            .setPositiveButton("Add", null) // Set to null to override later for text size
+            .setPositiveButton("Add", null)
             .setNegativeButton("Cancel", null)
             .create()
 

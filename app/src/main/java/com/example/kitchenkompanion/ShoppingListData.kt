@@ -10,8 +10,6 @@ object ShoppingListData {
                 items.add(ShoppingItem(name, 1, false, isSuggested))
             } else {
                 existing.quantity += 1
-                // If it was manual and now suggested, or vice versa, we keep the original flag or update? 
-                // Let's keep the suggested flag if it's ever suggested.
                 if (isSuggested) existing.isSuggested = true
             }
         }

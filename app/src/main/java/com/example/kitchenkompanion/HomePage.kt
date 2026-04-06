@@ -26,10 +26,8 @@ class HomePage : Fragment() {
 
         // Setup Greeting
         val tvGreeting = view.findViewById<TextView>(R.id.tvGreeting)
-        val username: String? = null
-        tvGreeting.text = getString(R.string.greeting_text, username ?: "User!")
+        tvGreeting.text = getString(R.string.greeting_text, FavoritesPage.currentUsername)
 
-        // Profile Picture -> ProfileFragment
         val ivProfile = view.findViewById<ImageView>(R.id.ivProfilePic)
         ivProfile.setOnClickListener { 
             parentFragmentManager.beginTransaction()
@@ -38,7 +36,6 @@ class HomePage : Fragment() {
                 .commit()
         }
 
-        // Recommended Recipes -> RecipeDetailFragment
         val rvRecommended = view.findViewById<RecyclerView>(R.id.rvRecommendedRecipes)
         val recipes = FavoritesPage.getAllRecipes()
         rvRecommended.adapter = RecipeAdapter(recipes) { recipe ->
@@ -52,7 +49,7 @@ class HomePage : Fragment() {
             navigateToIngredientDetail(ingredient)
         }
 
-        // See All -> All Ingredients
+        // All Ingredients
         view.findViewById<TextView>(R.id.tvSeeAll).setOnClickListener {
             navigateToAllItems(AllItemsPage.TYPE_INGREDIENTS)
         }
@@ -111,7 +108,6 @@ class HomePage : Fragment() {
             .commit()
     }
 
-    // Adapter for Recipes - Uses horizontal layout for home page scroll
     inner class RecipeAdapter(private val items: List<FavoritesPage.Companion.Recipe>, private val onClick: (FavoritesPage.Companion.Recipe) -> Unit) :
         RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
 
@@ -155,7 +151,6 @@ class HomePage : Fragment() {
         override fun getItemCount() = items.size
     }
 
-    // Adapter for Ingredients
     inner class IngredientAdapter(private val items: List<FavoritesPage.Companion.Ingredient>, private val onClick: (FavoritesPage.Companion.Ingredient) -> Unit) :
         RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
 

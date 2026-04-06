@@ -14,14 +14,14 @@
         <RelativeLayout
             android:id="@+id/headerBar"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="80dp"
             android:background="@color/blue"
             android:paddingHorizontal="16dp">
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:clickable="true"
@@ -37,7 +37,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="User Profile"
                 android:textColor="@color/white"
-                android:textSize="22sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="24dp">
 
             <ImageView
                 android:id="@+id/profileImage"
@@ -55,26 +55,53 @@
                 android:clickable="true"
                 android:contentDescription="Profile Picture"
                 android:focusable="true"
-                android:src="@drawable/img"
+                android:src="@drawable/img_2"
                 android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/profileName"
-                android:layout_width="wrap_content"
+            <!-- Editable Name Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Smiley J. Smile"
-                android:textColor="@color/black"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif" />
+                android:orientation="vertical"
+                android:layout_marginTop="24dp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Name"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/etProfileName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:hint="Enter your name"
+                    android:inputType="textPersonName"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/btnSaveName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Save Name"
+                    android:textSize="18sp"
+                    android:backgroundTint="@color/blue" />
+            </LinearLayout>
 
             <!-- Birthday Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="32dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -83,7 +110,7 @@
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/birthdayInput"
@@ -92,6 +119,7 @@
                     android:focusable="false"
                     android:hint="@string/birthday_hint"
                     android:inputType="none"
+                    android:textSize="20sp"
                     android:importantForAutofill="no"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/black" />
@@ -102,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="24dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -111,12 +139,12 @@
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
 
                 <Spinner
                     android:id="@+id/householdSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="54dp"
                     android:layout_marginTop="8dp"
                     android:entries="@array/household_members_array" />
             </LinearLayout>
@@ -126,7 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="24dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -135,21 +163,22 @@
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
 
                 <Spinner
                     android:id="@+id/allergiesSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="54dp"
                     android:layout_marginTop="8dp"
                     android:entries="@array/allergies_array" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     android:text="@string/selected_allergies_label"
                     android:textColor="@color/black"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-medium" />
 
@@ -160,7 +189,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/none_selected"
                     android:textColor="@color/black"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:fontFamily="sans-serif" />
             </LinearLayout>
 

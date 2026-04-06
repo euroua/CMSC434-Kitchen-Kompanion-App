@@ -22,7 +22,7 @@ class TodoFragment : Fragment(R.layout.fragment_todo) {
         val clearBtn = view.findViewById<Button>(R.id.clearButton)
         val recycler = view.findViewById<RecyclerView>(R.id.todoRecycler)
 
-        // Pre-fill some shopping list items without icons
+        // fill some shopping list items
         if (items.isEmpty()) {
             items.add(TodoItem("Milk"))
             items.add(TodoItem("Bread"))
