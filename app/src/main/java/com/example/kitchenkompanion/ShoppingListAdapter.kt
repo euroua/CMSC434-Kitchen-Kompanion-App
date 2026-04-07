@@ -1,5 +1,6 @@
 package com.example.kitchenkompanion
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,9 @@ class ShoppingListAdapter(context: android.content.Context, private val items: M
         quantityText.text = "Quantity: ${item.quantity}"
         checkBox.isChecked = item.checked
 
+        // Apply strike-through based on initial checked state
+        applyStrikeThrough(nameText, item.checked)
+
         if (item.isSuggested && (position == 0 || !items[position - 1].isSuggested)) {
             suggestedHeader.visibility = View.VISIBLE
             suggestedHeader.text = "Suggested for you"
@@ -44,6 +48,7 @@ class ShoppingListAdapter(context: android.content.Context, private val items: M
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             item.checked = isChecked
+            applyStrikeThrough(nameText, isChecked)
         }
 
         btnPlus.setOnClickListener {
@@ -61,5 +66,13 @@ class ShoppingListAdapter(context: android.content.Context, private val items: M
         }
 
         return view
+    }
+
+    private fun applyStrikeThrough(textView: TextView, isChecked: Boolean) {
+        if (isChecked) {
+            textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        } else {
+            textView.paintFlags = textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        }
     }
 }
